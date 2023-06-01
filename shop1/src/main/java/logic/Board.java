@@ -25,7 +25,7 @@ public class Board {
 	private int grplevel;
 	private int grpstep;
 	private int commcnt;
-	//setter, getter, toString
+	//s g t
 	public int getNum() {
 		return num;
 	}
@@ -49,6 +49,12 @@ public class Board {
 	}
 	public void setPass(String pass) {
 		this.pass = pass;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
 	}
 	public String getContent() {
 		return content;
@@ -98,13 +104,6 @@ public class Board {
 	public void setGrpstep(int grpstep) {
 		this.grpstep = grpstep;
 	}
-	
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
 	public int getCommcnt() {
 		return commcnt;
 	}
@@ -118,6 +117,6 @@ public class Board {
 				+ ", readcnt=" + readcnt + ", grp=" + grp + ", grplevel=" + grplevel + ", grpstep=" + grpstep
 				+ ", commcnt=" + commcnt + "]";
 	}
+		
 	
-
 }

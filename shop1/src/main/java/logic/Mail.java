@@ -10,9 +10,8 @@ public class Mail {
 	private String recipient;
 	private String title;
 	private String mtype;
-	private List<MultipartFile> file1; //메일 전송시 첨부파일 2개가능
+	private List<MultipartFile> file1;
 	private String contents;
-	//setter, getter, toString
 	public String getNaverid() {
 		return naverid;
 	}
@@ -60,4 +59,6 @@ public class Mail {
 		return "Mail [naverid=" + naverid + ", naverpw=" + naverpw + ", recipient=" + recipient + ", title=" + title
 				+ ", mtype=" + mtype + ", file1=" + file1 + ", contents=" + contents + "]";
 	}
+	
+	
 }
