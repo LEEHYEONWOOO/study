@@ -47,7 +47,7 @@ public class AjaxController {
 		//LinkedHashSet : 순서유지. 중복불가. 리스트아님(첨자사용안됨).
 		Set<String> set = new LinkedHashSet<>();
 		String data= null;
-		if(si==null && gu==null) {  //시도 선택
+		if(si==null && gu==null) {  //시도 선택 
 			try {
 				//fr.readLine() : 한줄씩 read
 				while((data=fr.readLine()) != null) {
