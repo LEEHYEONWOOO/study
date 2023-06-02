@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("ajax")
 public class AjaxController {
 	
+	
 	@RequestMapping("select")
 	public List<String> select(String si, String gu, HttpServletRequest request) {
 		BufferedReader fr = null;
