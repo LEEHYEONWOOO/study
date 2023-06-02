@@ -81,8 +81,11 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     <c:if test='${url == "board" && boardid=="3"}'>w3-blue</c:if>">
     <i class="fa fa-eye fa-fw"></i>&nbsp; QnA</a>
   </div>
+  <%-- 수출입은행 환율 정보 표시 영역 --%>
+  <div>
+     <div id="exchange" style="margin: 6px;"></div>
+  </div>
 </nav>
-
 
 <!-- Overlay effect when opening sidebar on small screens -->
 <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
@@ -191,10 +194,11 @@ function w3_close() {
   overlayBg.style.display = "none";
 }
 </script>
-
 <script type="text/javascript">
    $(function(){
-	   getSido()
+	   getSido()   //sido.txt 파일을 읽어서 시도 정보 조회
+//	   exchangeRate() //수출입은행 환율 정보 조회
+	   exchangeRate2() //수출입은행 환율 정보 조회. 서버에서 배열로 전송받아서 화면 출력하기
    })
    
    function getSido() {  //서버에서 리스트객체를 배열로 직접 전달 받음
@@ -213,45 +217,104 @@ function w3_close() {
 		   }
 	   })
    }
-   
-   function getText(name) { //si : 시도 선택, gu:구군 선택
-		let city = $("select[name='si']").val()
-		let gun = $("select[name='gu']").val()
+   function getSido2() {  //서버에서 문자열로 전달 받기
+	   $.ajax({
+		   url : "${path}/ajax/select2",
+		   success : function(data) { //data : [서울특별시,... 제주특별자치도], 문자열
+			   console.log(data)
+			   //arr : 배열객체
+			   let arr = data.substring(data.indexOf('[')+1, data.indexOf(']')).split(",");
+			   $.each(arr,function(i,item){
+				   $("select[name=si]").append(function(){
+					   return "<option>"+item+"</option>"
+				   })
+			   })
+		   }
+	   })
+   }
+   function getText(name) { //si
+		let city = $("select[name='si']").val();  //시도 선택값 
+		let gu = $("select[name='gu']").val();    //구군 선택값
 		let disname;
-	    let toptext='구군을 선택하세요'
-	    let params = ''
-	    if(name=='si') {
-	    	params = "si=" + city.trim()
-	    	disname = "gu"
-	    } else if (name=='gu') {
-	    	params = "si=" + city.trim()+"&gu="+gun.trim()
-	    	disname = "dong"
-	    	toptext='동리를 선택하세요'
-	    } else {
-	    	return 
-	    }
-	    $.ajax({
-	    	url : "${path}/ajax/select",
-	    	type : "POST",
-	    	data:params,
-	    	success : function(data) {
-	    		console.log(data)
-	    		let arr = JSON.parse(data)
-	    		$("select[name="+disname+"] option").remove()
-	    		$("select[name="+disname+"]").append(function(){
-	    			return "<option value=''>"+toptext+"</option>"
-	    		})
-	    		$.each(arr,function(i,item){
-	        		$("select[name="+disname+"]").append(function(){
-	        			return "<option>"+item+"</option>"
-	    		    })
-	    		})
-	    	   },
-	    	error : function(e){
-	    		alert("서버오류:"+e.status)
-	    	}
-	    })
-	  }
+		let toptext="구군을 선택하세요";
+		let params = "";
+		if (name == "si") { //시도 선택한 경우
+			params = "si=" + city.trim();
+			disname = "gu"; 
+		} else if (name == "gu") { //구군 선택한 경우 
+			params = "si=" + city.trim()+"&gu="+gu.trim();
+			disname = "dong";
+			toptext="동리를 선택하세요";		
+		} else { 
+			return ;
+		}
+		$.ajax({
+		  url : "${path}/ajax/select",
+		  type : "POST",    
+		  data : params,  			
+		  success : function(arr) {
+			  $("select[name="+disname+"] option").remove(); //출력 select 태그의 option 제거
+			  $("select[name="+disname+"]").append(function(){
+				  return "<option value=''>"+toptext+"</option>"
+			  })
+			  $.each(arr,function(i,item) {  //서버에서 전송 받은 배열값을 option 객체로 추가
+				  $("select[name="+disname+"]").append(function(){
+					  return "<option>"+item+"</option>"
+				  })
+			  })
+		  }
+	   })				
+	}
+   function exchangeRate() {
+	   $.ajax("${path}/ajax/exchange",{
+		   success : function(data) {
+			   console.log(data)
+			   $("#exchange").html(data)
+		   },
+		   error : function(e) {
+			   alert("환율 조회시 서버 오류 발생 :" + e.status)
+		   }
+	   })
+   }
+/*   
+   function exchangeRate2() {
+	   $.ajax("${path}/ajax/exchange2",{
+		   success : function(json) {
+			   let html = "<h4 class='w3-center'>수출입은행<br>"+json.exdate+"</h4>"
+			   html += "<table class='w3-table-all w3-margin-right'>"
+			   html += "<tr><th>통화</th><th>기준율</th><th>받을실때</th><th>보내실때</th></tr>"
+			   $.each(json.trlist,function(i,tds){
+				   html += "<tr><td>"+tds[0]+"<br>"+tds[1]+"</td><td>"+tds[4]+"</td>"
+					     + "<td>"+tds[2]+"</td><td>"+tds[3]+"</td></tr>"
+			   })
+			   html += "</table>"
+			   $("#exchange").html(html)
+		   },
+		   error : function(e) {
+			   alert("환율 조회시 서버 오류 발생 :" + e.status)
+		   }
+	   })
+   }
+*/   
+function exchangeRate2() {
+	   $.ajax("${path}/ajax/exchange2",{ // Map로 데이터 수신
+		   success : function(json) {
+			   console.log(json)
+			   let html = "<h4 class='w3-center'>수출입은행<br>"+json.exdate+"</h4>"
+			   html += "<table class='w3-table-all w3-margin-right'>"
+			   html += "<tr><th>통화</th><th>기준율</th><th>받을실때</th><th>보내실때</th></tr>"
+			   $.each(json.trlist,function(i,tds){ //tds : 배열
+				   html += "<tr><td>"+tds[0]+"<br>"+tds[1]+"</td><td>"+tds[4]+"</td>"
+					     + "<td>"+tds[2]+"</td><td>"+tds[3]+"</td></tr>"
+			   })
+			   html += "</table>"
+			   $("#exchange").html(html)
+		   },
+		   error : function(e) {
+			   alert("환율 조회시 서버 오류 발생 :" + e.status)
+		   }
+	   })
+}
 </script>
 </body>
 </html>
