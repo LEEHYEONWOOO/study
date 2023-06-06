@@ -166,7 +166,7 @@ public class AjaxController {
 		return sb.toString();
 	}
 	@RequestMapping("exchange2")
-	public Map<String,Object> exchange2() {  //json 데이터로 전송
+	public Map<String,Object> exchange2() {  // 데이터로 전송
 //	public List<List<String>> exchange2() {
 		Document doc = null;
 		List<List<String>> trlist = new ArrayList<>();  //미국,중국,일본,유로 통화들만 저장 목록
@@ -187,7 +187,8 @@ public class AjaxController {
 				   if(tdlist.get(0).equals("USD") //미달러 통화코드
 			    	|| tdlist.get(0).equals("CNH") //중국 통화코드
 			        || tdlist.get(0).equals("JPY(100)") //일본 통화코드
-			        || tdlist.get(0).equals("EUR")) {   //유로 통화코드
+			        //|| tdlist.get(0).equals("EUR")
+			        ) {   //유로 통화코드
 				    trlist.add(tdlist);
 				   }
 			    }

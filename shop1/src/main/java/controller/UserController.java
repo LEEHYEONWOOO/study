@@ -7,7 +7,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -25,6 +28,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import exception.LoginException;
@@ -38,15 +43,16 @@ public class UserController {
 	@Autowired 
 	private ShopService service;
 	
-	@GetMapping("test1")
-	public ModelAndView test1() throws IOException, ParseException {
+	 @RequestMapping("test2")
+	public @ResponseBody JSONObject test2() throws IOException, ParseException {
+		 System.out.println("호출됨");
 		ModelAndView mav = new ModelAndView();
 		StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst"); /*URL*/
         urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=cIU8HoBdDJx9IAv4NEQ88GvIfz3eoVBo1LHbEfxRtMKcNlK7xaWgZQexbnedoiqNWqPVRcLQ4JeBb8YhhBW6Cw%3D%3D"); /*Service Key*/
         urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
         urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("1000", "UTF-8")); /*한 페이지 결과 수*/
         urlBuilder.append("&" + URLEncoder.encode("dataType","UTF-8") + "=" + URLEncoder.encode("JSON", "UTF-8")); /*요청자료형식(XML/JSON) Default: XML*/
-        urlBuilder.append("&" + URLEncoder.encode("base_date","UTF-8") + "=" + URLEncoder.encode("20230604", "UTF-8")); /*‘21년 6월 28일 발표*/
+        urlBuilder.append("&" + URLEncoder.encode("base_date","UTF-8") + "=" + URLEncoder.encode("20230605", "UTF-8")); /*‘21년 6월 28일 발표*/
         urlBuilder.append("&" + URLEncoder.encode("base_time","UTF-8") + "=" + URLEncoder.encode("0900", "UTF-8")); /*06시 발표(정시단위) */
         urlBuilder.append("&" + URLEncoder.encode("nx","UTF-8") + "=" + URLEncoder.encode("60", "UTF-8")); /*예보지점의 X 좌표값*/
         urlBuilder.append("&" + URLEncoder.encode("ny","UTF-8") + "=" + URLEncoder.encode("127", "UTF-8")); /*예보지점의 Y 좌표값*/
@@ -74,20 +80,36 @@ public class UserController {
         // 2. 문자열을 JSON 형태로 JSONObject 객체에 저장. 	
         JSONObject obj = (JSONObject)parser.parse(sb.toString());
         // 3. 필요한 리스트 데이터 부분만 가져와 JSONArray로 저장.
-        System.out.println("obj : "+obj);
-        JSONArray dataArr = (JSONArray) obj.get("category");
-        System.out.println(dataArr);
         // 4. model에 담아준다.
-        System.out.println("jsonsb++++ "+dataArr);
-        mav.addObject("jsonsb",dataArr);
-        System.out.println("sb++++ "+sb.toString());
+        mav.addObject("jsonsb",obj);
         mav.addObject("sb",sb.toString());
         //mav.addObject("sb",sb.toString()); //이건 String Type
+        /*
+        String strJson = sb.toString();
+        JSONParser parser = new JSONParser();
+        Object obj = parser.parse(strJson);
+         */
+        JSONObject jsonObj = (JSONObject) obj;
         
+        JSONObject response = (JSONObject) jsonObj.get("response");
+        JSONObject body = (JSONObject) response.get("body");
+        JSONObject items = (JSONObject) body.get("items");
+        JSONArray item = (JSONArray) items.get("item");
+       
+         
         
+        mav.addObject("sbt",sb.toString());
+        mav.addObject("obj",obj);
+        System.out.println("obj : "+obj);
+        
+		return obj;
+	}
+	@RequestMapping("test1")
+	public ModelAndView tete1() {
+		ModelAndView mav = new ModelAndView();
+		mav.addObject(new User());
 		return mav;
 	}
-	
 	@GetMapping("*")  //설정되지 않은 모든 요청시 호출되는 메서드
 	public ModelAndView join() {
 		ModelAndView mav = new ModelAndView();
