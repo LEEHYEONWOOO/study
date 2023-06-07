@@ -79,6 +79,11 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     class="w3-bar-item w3-button w3-padding <c:if test='${url == "board" && boardid=="3"}'>w3-blue</c:if>">
     <i class="fa fa-eye fa-fw"></i>&nbsp; QnA</a>
   </div>
+  
+  <div>
+  	<div id="exchange"></div>
+  </div>
+  
 </nav>
 
 
@@ -189,6 +194,7 @@ function w3_close() {
 <script type="text/javascript">
 	$(function(){
 		getSido2()
+		exchangeRate2()
 	})
 	function getSido(){	//서버에서 리스트 객체를 배열로 직접 전달받음
 		$.ajax({
@@ -254,6 +260,39 @@ function w3_close() {
 			}
 		})
 		
+	}
+	/*
+	function exchangeRate() {
+		$.ajax("${path}/ajax/exchange",{
+			success : function(data){
+				console.log(data)
+				$("#exchange").html(data)
+			},
+			error : function(e){
+				alert("환율 조회시 서버 오류 발생 : "+ e.status)
+			}
+		})
+	}
+	*/
+	function exchangeRate2() {
+		$.ajax("${path}/ajax/exchange2",{
+			success : function(json){
+				console.log(json)
+				let html = "<h4 class='w3-center'>수출입은행<br>"+json.exdate+"</h4>"
+				html += "<table class='w3-table-all w3-margin-right'>"
+				html += "<tr><th>통화</th><th>기준율</th><th>받으실때</th><th>보내실때</th><tr>"
+				$.each(json.trlist,function(i,tds){
+					html += "<tr><td>"+tds[0] + "<br>" +tds[1]+ "</td><td>"+tds[4]+"</td>"
+						+"<td>"+tds[2]+"</td><td>"+tds[3]+"</td></tr>"
+				})
+				html += "</table>"
+				$("#exchange").html(html)
+			},
+			
+			error : function(e){
+				alert("환율 조회시 서버 오류 발생 : "+ e.status)
+			}
+		})
 	}
 </script>
 </body>
