@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Map;
 
 import org.json.simple.JSONArray;
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,16 +38,15 @@ public class WeatherController {
        mav.addObject(new User());
        return mav;
     }
-    
-    @RequestMapping("weather2")
-	public String commissionUpdate(@RequestParam Map<String,Object> param, Model model) {
-
-    	Map data = (Map) param.get("data");
-    	System.out.println(data.get("data"));
-    	System.out.println(data.get("loc"));
+    @ResponseBody
+    @PostMapping("weather2")
+    public List<Map<String, Object>> test(@RequestBody List<Map<String, Object>> param) {
+        System.out.println("param : "+ param);
+        System.out.println(param.get(0));
+        System.out.println(param.get(0).get("loc"));
+        System.out.println(param.get(0).get("date"));
     	
-    	
-		return null;
+		return param;
 	}
     
     
