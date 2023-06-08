@@ -12,17 +12,15 @@
 <title>Weather Api 호출 예제</title>
 
 <script type="text/javascript">
-var date = $("#date").val();
-var location = $("#location").val();
-var param = {"date":date, "location":location}
 
 $(function(){
       weather() //수출입은행 환율 정보 조회. 서버에서 배열로 전송받아서 화면 출력하기
+      
 })
 
 function weather() {
       $.ajax("${path}/api/weatherApi",{ // Map로 데이터 수신
-    	  success : function(data) {
+         success : function(data) {
               let table = '<caption>'+data[0].baseDate+'</caption>';
               $.each(data, function(i){
                  let category = data[i].category.replace(/(PTY|REH|RN1|T1H|UUU|VEC|VVV|WSD)/g, function(ex){
@@ -46,17 +44,37 @@ function weather() {
            }
         })
      }
+     
+		
+	function weather2() { 
+	var ret = [
+			{data:JSON.stringify($('#date').val())},
+			{loc:JSON.stringify($('#loc').val())}
+	]
+	console.log(ret)
+   	$.ajax({
+		  url: "${path}/weather/weather2"
+			  ,type: 'POST'
+					 ,data: {data:JSON.stringify(ret)}
+					 ,dataType: 'json' // text
+					 ,traditional:true
+					 ,success: function(data) {
+						alert("success -- -->" + data)
+					 }
+					 
+				 })
+}
 </script>
 
 </head>
 <body>
 <div>
-  <select name="location">
-  <option value="1">서울</option>
-  <option value="2">경기</option>
-  <option value="3">대전</option>
-  <option value="4">대구</option>
-  <option value="5">부산</option>
+  <select id="loc">
+  <option value="서서">서울</option>
+  <option value="경경">경기</option>
+  <option value="전전">대전</option>
+  <option value="대대">대구</option>
+  <option value="부부">부산</option>
   </select>
 </div>
 <div>
@@ -72,7 +90,7 @@ function weather() {
   </select>
   
 </div>
-<button id="button1" value="">
+<button onclick="weather2()" id="button1" value="">
 날씨검색
 </button>
 <h1>예제 출력입니다.</h1>

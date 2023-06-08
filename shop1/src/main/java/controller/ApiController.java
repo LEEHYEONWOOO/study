@@ -24,10 +24,10 @@ import logic.User;
 @Controller
 @RequestMapping("api")
 public class ApiController {
-	
    
-	@RequestMapping("weatherApi")
-	   public @ResponseBody JSONArray test2() throws IOException, ParseException {
+   
+   @RequestMapping("weatherApi")
+      public @ResponseBody JSONArray test2() throws IOException, ParseException {
 
        System.out.println("weatherApi호출됨");
       StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst"); /*URL*/
