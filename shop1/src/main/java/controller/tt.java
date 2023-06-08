@@ -47,7 +47,7 @@ public class tt {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Content-type", "application/json");
-        System.out.println("Response code: " + conn.getResponseCode());
+        //System.out.println("Response code: " + conn.getResponseCode());
         BufferedReader rd;
         if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -61,7 +61,7 @@ public class tt {
         }
         rd.close();
         conn.disconnect();
-        System.out.println(sb.toString());
+        //System.out.println(sb.toString());
         // 1. 문자열 형태의 JSON을 파싱하기 위한 JSONParser 객체 생성.
         JSONParser parser = new JSONParser();
         // 2. 문자열을 JSON 형태로 JSONObject 객체에 저장.    
@@ -81,8 +81,8 @@ public class tt {
         JSONObject items = (JSONObject) body.get("items");
         JSONArray item = (JSONArray) items.get("item");
        
-        System.out.println("obj : "+obj);
-        
+        //System.out.println("obj : "+obj);
+        System.out.println("item out : \n"+item);
       return item;
    }
 }
