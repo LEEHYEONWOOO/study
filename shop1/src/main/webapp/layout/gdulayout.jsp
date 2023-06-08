@@ -44,8 +44,6 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
   <div class="w3-container w3-row">
     <div class="w3-col s4">
-      <img src="${path}/image/logo.png" 
-         class="w3-circle w3-margin-right" style="width:100px">
     </div>
     <div class="w3-col s8 w3-bar">
       <c:if test="${!empty sessionScope.loginUser}">
@@ -196,6 +194,7 @@ function w3_close() {
 		getSido2()
 		exchangeRate2()
 	})
+	/*
 	function getSido(){	//서버에서 리스트 객체를 배열로 직접 전달받음
 		$.ajax({
 			url : "${path}/ajax/select",
@@ -211,6 +210,7 @@ function w3_close() {
 			}
 		})
 	}
+	*/
 	function getSido2(){	//서버에서 문자열로 전달 받기
 		$.ajax({
 			url : "${path}/ajax/select2",

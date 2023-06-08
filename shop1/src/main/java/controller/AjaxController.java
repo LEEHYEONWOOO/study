@@ -133,6 +133,7 @@ public class AjaxController {
 			}
 		}
 		List<String> list = new ArrayList<>(set); //set 객체 => List 객체
+		System.out.println("select2의 listtostr : "+list.toString());
 		return list.toString();	//리스트 객체가 브라우저에 전달. 뷰가 아님
 						//pom.xml의 fasterxml.jackson...의 설정에 의해서 브라우저는 배열로 인식함
 	}
