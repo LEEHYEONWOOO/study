@@ -92,7 +92,7 @@ function weather2() {
          alert("날씨 조회시 서버 오류 발생 : "+e.status)
       }
    })
-}
+}rear
      
 		
 	function weather3() { 

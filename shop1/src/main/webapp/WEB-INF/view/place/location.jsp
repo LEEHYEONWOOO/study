@@ -48,6 +48,7 @@
  function place() {
 	 alert("si2="+document.getElementById('sinum').value + "&gu2=" + document.getElementById('gunum').value)
 	 params = "si2="+document.getElementById('sinum').value + "&gu2=" + document.getElementById('gunum').value;
+	 $("#weather *").remove();
 	 /*
 	 $.ajax("${path}/api/placeApi",{ // Map로 데이터 수신*/
 			$.ajax({

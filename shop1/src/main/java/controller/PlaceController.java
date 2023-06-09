@@ -21,12 +21,13 @@ import logic.User;
 public class PlaceController {
    
    
-    @GetMapping("location")  //설정되지 않은 모든 요청시 호출되는 메서드
+    @GetMapping("*")  //설정되지 않은 모든 요청시 호출되는 메서드
     public ModelAndView join() {
        ModelAndView mav = new ModelAndView();
        mav.addObject(new User());
        return mav;
     }
+    
     
     
     
