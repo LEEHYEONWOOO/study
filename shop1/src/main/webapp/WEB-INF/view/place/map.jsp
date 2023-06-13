@@ -107,8 +107,8 @@ function placesSearchCB(data, status, pagination) {
 
         // 정상적으로 검색이 완료됐으면
         // 검색 목록과 마커를 표출합니다
+        
         displayPlaces(data);
-
         // 페이지 번호를 표출합니다
         displayPagination(pagination);
 
@@ -194,6 +194,7 @@ function getListItem(index, places) {
     if (places.road_address_name) {
         itemStr += '    <span>' + places.road_address_name + '</span>' +
                     '   <span class="jibun gray">' +  places.address_name  + '</span>';
+        itemStr += '    <span>' + places.category_group_code + '</span>' //카테고리 출력해봄
     } else {
         itemStr += '    <span>' +  places.address_name  + '</span>'; 
     }

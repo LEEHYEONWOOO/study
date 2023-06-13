@@ -100,47 +100,11 @@ public class ApiController {
     
 	
 	
-		@RequestMapping("placeApi") //충전소 위치 출력(old ver)
-		public @ResponseBody JSONArray test3(String si2, String gu2, HttpServletRequest request) throws IOException, ParseException {
-		 System.out.println("placeApi call");
-		 System.out.println("si2 = "+si2+" gu2 = "+gu2);
-	   StringBuilder urlBuilder = new StringBuilder("https://bigdata.kepco.co.kr/openapi/v1/EVcharge.do");
-	       urlBuilder.append("?" + URLEncoder.encode("metroCd","UTF-8") + "=" + URLEncoder.encode(si2, "UTF-8"));
-	       urlBuilder.append("&" + URLEncoder.encode("cityCd","UTF-8") + "=" + URLEncoder.encode(gu2, "UTF-8"));
-	     urlBuilder.append("&" + URLEncoder.encode("apiKey","UTF-8") + "=XmusbW46HG076pa219D4Y2X59Wpy76w1tcA70U79");
-	     urlBuilder.append("&" + URLEncoder.encode("returnType","UTF-8") + "=" + URLEncoder.encode("json", "UTF-8"));
-	     
-	     URL url = new URL(urlBuilder.toString());
-	     System.out.println(url);
-	     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-	     conn.setRequestMethod("GET");
-	     conn.setRequestProperty("Content-type", "application/json");
-	     BufferedReader rd;
-	     if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
-	         rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-	     } else {
-	         rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-	     }
-	     StringBuilder sb = new StringBuilder();
-	     String line;
-	     while ((line = rd.readLine()) != null) {
-	         sb.append(line);
-	     }
-	     rd.close();
-	        conn.disconnect();
-	        JSONParser parser = new JSONParser();
-	        JSONObject obj = (JSONObject)parser.parse(sb.toString());
-	        
-	        JSONObject jsonObj = (JSONObject) obj;
-	        JSONArray item = (JSONArray) jsonObj.get("data");
-	        
-	        System.out.println("item : "+item);
-	      return item;
-	}
 
 		
 		@RequestMapping("ecclocationApi") //충전소 장소 출력 (new ver)
 		public @ResponseBody JSONArray test4(String zscode, HttpServletRequest request) throws IOException, ParseException {
+		//public @ResponseBody String test4(String zscode, HttpServletRequest request) throws IOException, ParseException {
 		 System.out.println("ecclocationApi call");
 		 //System.out.println("si2 = "+si2+" gu2 = "+gu2);
 		 StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B552584/EvCharger/getChargerInfo"); /*URL*/
@@ -165,7 +129,7 @@ public class ApiController {
 	            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
 	        }
 	        StringBuilder sb = new StringBuilder();
-	        String line;
+	        String line="";
 	        while ((line = rd.readLine()) != null) {
 	            sb.append(line);
 	        }
@@ -176,7 +140,6 @@ public class ApiController {
 	        JSONObject jsonObj = (JSONObject) obj;
 	        JSONObject items = (JSONObject) jsonObj.get("items");
 	        JSONArray item = (JSONArray) items.get("item");
-	        
 	        
 	        return item;
 	}
@@ -223,9 +186,7 @@ public class ApiController {
 		if(si2==null && gu2==null) {
 			for(int i=0; i<data.size(); i++ ) {
 				set.add(data.get(i).toString().substring(25,data.get(i).toString().indexOf("codeNm")-3).trim());
-				
 			}
-			System.out.println("data(0) : "+data.get(0));
 		}
 		List<String> list = new ArrayList<>(set); //set 객체 => List 객체
 		System.out.println("list.tostring   :   " + list.toString());
