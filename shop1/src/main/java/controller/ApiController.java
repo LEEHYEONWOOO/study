@@ -114,7 +114,7 @@ public class ApiController {
 	        //urlBuilder.append("&" + URLEncoder.encode("zcode","UTF-8") + "=" + URLEncoder.encode("11", "UTF-8"));
 	        urlBuilder.append("&" + URLEncoder.encode("zscode","UTF-8") + "=" + URLEncoder.encode(zscode, "UTF-8")); 
 	      //  urlBuilder.append("&" + URLEncoder.encode("kind","UTF-8") + "=" + URLEncoder.encode("F0", "UTF-8")); 
-	      //  urlBuilder.append("&" + URLEncoder.encode("kindDetail","UTF-8") + "=" + URLEncoder.encode("F002", "UTF-8")); 
+	      ///  urlBuilder.append("&" + URLEncoder.encode("kindDetail","UTF-8") + "=" + URLEncoder.encode("F002", "UTF-8")); 
 	        urlBuilder.append("&" + URLEncoder.encode("dataType","UTF-8") + "=" + URLEncoder.encode("JSON", "UTF-8")); 
 	        URL url = new URL(urlBuilder.toString());
 	        System.out.println("url = "+url);
