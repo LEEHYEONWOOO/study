@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import dao.BoardDao;
+import dao.ExDao;
 import dao.ItemDao;
 import dao.SaleDao;
 import dao.SaleItemDao;
@@ -32,6 +33,8 @@ public class ShopService {
 	private SaleItemDao saleItemDao;
 	@Autowired 
 	private BoardDao boardDao;
+	@Autowired 
+	private ExDao exDao;
 
 	public List<Item> itemList() {
 		return itemDao.list();
@@ -209,5 +212,9 @@ public class ShopService {
 	}
 	public List<User> getUserlist(String phoneno) {
 		return userDao.phoneList(phoneno);
+	}
+	public void exchangeInsert(Exchange ex) {
+		exDao.insert(ex);
+		
 	}
 }

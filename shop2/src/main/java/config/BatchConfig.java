@@ -11,7 +11,7 @@ import util.CountScheduler;
  * 
  */
 @Configuration
-//@EnableScheduling		//Scheduling 적용.
+@EnableScheduling		//Scheduling 적용.
 public class BatchConfig {
 	@Bean
 	public CountScheduler countScheduler() {

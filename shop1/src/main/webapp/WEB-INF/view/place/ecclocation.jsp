@@ -46,7 +46,7 @@
 #pagination a {display:inline-block;margin-right:10px;}
 #pagination .on {font-weight: bold; cursor: default;color:#777;}
 </style>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js" integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> <!-- locash메소드 -->
 </head>
 <body>
 <h1>충전소 정보.</h1>
@@ -90,7 +90,6 @@
         <div id="pagination"></div>
     </div>
 </div>
-
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=02d94db8e10d97b2ae5cfd31f23e9c4c&libraries=services"></script>
 <script>
 var mark_index=0;
@@ -116,40 +115,49 @@ var infowindow = new kakao.maps.InfoWindow({zIndex:1});
 //searchPlaces();
 
 // 키워드 검색을 요청하는 함수입니다
-function searchPlaces(placeslist) {
+function searchPlaces(data) {
     // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
-    for ( var i=0; i<placeslist.length; i++ ) {
-    	ps.keywordSearch(placeslist[i], placesSearchCB); 
+    //for ( var i=0; i<data.length; i++ ) {
+    for ( var i=0; i<1; i++ ) {
+    	//ps.keywordSearch(data[i].statNm, placesSearchCB);
+    	ps.keywordSearch(data[i].statNm, function(data2, status, pagination) {//CB함수가 있던자리지만 화끈하게 날렸음
+    		if (status === kakao.maps.services.Status.OK) {  
+    	        
+    	        //console.log('불러왔냐!')
+    	        for(var j=0; j<data2.length; j++){
+   	        		console.log(data[i].addr +"  ==   "+ data2[j].road_address_name)
+	    	        if(data[i].addr == data2[j].road_address_name){
+    	        		alert(data[i].addr +"  ==   "+ data2[j].road_address_name)
+    		        }
+    	        }
+    	        
+    	        displayPlaces(data2[0]);
+    	        
+    	        displayPagination(pagination);
+
+        } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+
+            alert('검색 결과가 존재하지 않습니다.');
+            return;
+
+        } else if (status === kakao.maps.services.Status.ERROR) {
+
+            alert('검색 결과 중 오류가 발생했습니다.');
+            return;
+
+        }
+    	}
+    	    );
     }
 }
 
-// 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
-function placesSearchCB(data, status, pagination) {
-    if (status === kakao.maps.services.Status.OK) {
 
-        // 정상적으로 검색이 완료됐으면
-        // 검색 목록과 마커를 표출합니다
-        displayPlaces(data);
-        
-        // 페이지 번호를 표출합니다
-        displayPagination(pagination);
 
-    } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-
-        alert('검색 결과가 존재하지 않습니다.');
-        return;
-
-    } else if (status === kakao.maps.services.Status.ERROR) {
-
-        alert('검색 결과 중 오류가 발생했습니다.');
-        return;
-
-    }
-}
+		
+    
 
 // 검색 결과 목록과 마커를 표출하는 함수입니다
 function displayPlaces(places) {
-
     var listEl = document.getElementById('placesList'), 
     menuEl = document.getElementById('menu_wrap'),
     fragment = document.createDocumentFragment(), 
@@ -161,13 +169,13 @@ function displayPlaces(places) {
 
     // 지도에 표시되고 있는 마커를 제거합니다
     //removeMarker();
-    
+    console.log(places)
     for ( var i=0; i<1; i++ ) {
 
         // 마커를 생성하고 지도에 표시합니다
-        var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
+        var placePosition = new kakao.maps.LatLng(places.y, places.x),
             marker = addMarker(placePosition, mark_index), 
-            itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
+            itemEl = getListItem(i, places); // 검색 결과 항목 Element를 생성합니다
 
         // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
         // LatLngBounds 객체에 좌표를 추가합니다
@@ -192,7 +200,7 @@ function displayPlaces(places) {
             itemEl.onmouseout =  function () {
                 infowindow.close();
             };
-        })(marker, places[i].place_name);
+        })(marker, places.place_name);
 
         fragment.appendChild(itemEl);
     }
@@ -204,6 +212,65 @@ function displayPlaces(places) {
     // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
     map.setBounds(bounds);
 }
+
+/* 내가 틀릴수도있응니 백업해놓음
+ * // 검색 결과 목록과 마커를 표출하는 함수입니다
+ function displayPlaces(places) {
+	    var listEl = document.getElementById('placesList'), 
+	    menuEl = document.getElementById('menu_wrap'),
+	    fragment = document.createDocumentFragment(), 
+	    bounds = new kakao.maps.LatLngBounds(), 
+	    listStr = '';
+	    
+	    // 검색 결과 목록에 추가된 항목들을 제거합니다
+	    //removeAllChildNods(listEl);
+
+	    // 지도에 표시되고 있는 마커를 제거합니다
+	    //removeMarker();
+	    console.log(places)
+	    for ( var i=0; i<1; i++ ) {
+
+	        // 마커를 생성하고 지도에 표시합니다
+	        var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
+	            marker = addMarker(placePosition, mark_index), 
+	            itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
+
+	        // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+	        // LatLngBounds 객체에 좌표를 추가합니다
+	        bounds.extend(placePosition);
+
+	        // 마커와 검색결과 항목에 mouseover 했을때
+	        // 해당 장소에 인포윈도우에 장소명을 표시합니다
+	        // mouseout 했을 때는 인포윈도우를 닫습니다
+	        (function(marker, title) {
+	            kakao.maps.event.addListener(marker, 'mouseover', function() {
+	                displayInfowindow(marker, title);
+	            });
+
+	            kakao.maps.event.addListener(marker, 'mouseout', function() {
+	                infowindow.close();
+	            });
+
+	            itemEl.onmouseover =  function () {
+	                displayInfowindow(marker, title);
+	            };
+
+	            itemEl.onmouseout =  function () {
+	                infowindow.close();
+	            };
+	        })(marker, places[i].place_name);
+
+	        fragment.appendChild(itemEl);
+	    }
+
+	    // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
+	    listEl.appendChild(fragment);
+	    menuEl.scrollTop = 0;
+
+	    // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+	    map.setBounds(bounds);
+	}
+ */
 
 // 검색결과 항목을 Element로 반환하는 함수입니다
 function getListItem(index, places) {
@@ -322,18 +389,14 @@ function removeAllChildNods(el) {
 				type : "POST",
 				data : params,
          success : function(data) {
-        	 console.log(data)
+        	 data1=data
+        	 //console.log(data)
+           	data = _.uniqBy(data,'statNm')
+           	data = _.uniqBy(data,'addr')
               let table = '<caption>'+$("select[name=si2]").val()+' '+$("select[name=gu2]").val()+'</caption><tr><td>충전소명</td><td>충전기타입</td><td>주소</td><td>이용가능시간</td><td>운영기관연락처</td></tr>';
               $.each(data, function(i){
             	  placeslist[i] = data[i].statNm;
-            	  /*
-            	  if(i==0 || data[i].statNm!=data[i-1].statNm){
-            	  	placeslist[i-redun_num] = data[i].statNm;
-            	  }else{
-            		  redun_num += 1;
-            	  }
-            	  */
-            	  console.log(placeslist)
+            	  //console.log(placeslist)
                   let chgerType = data[i].chgerType.replace(/(01|02|03|04|05|06|07|89)/g, function(ex){
                       switch(ex){
                        case "01" : return "DC차데모";
@@ -352,8 +415,8 @@ function removeAllChildNods(el) {
               const set = new Set(placeslist);
               placeslist = [...set];
               $("#placetable").append(table)
-              console.log(placeslist)// 이게 전기차 검색시의 모든 결과 목록 뽑은건데
-              searchPlaces(placeslist)
+              //console.log(placeslist)// 이게 전기차 검색시의 모든 결과 목록 뽑은건데
+              searchPlaces(data)
            },
            error : function(e) {
               alert("충전소 찾다가 에러발생 : "+e.status)

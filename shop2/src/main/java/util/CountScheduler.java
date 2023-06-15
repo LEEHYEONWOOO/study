@@ -1,8 +1,21 @@
 package util;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Exchanger;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import logic.Exchange;
+import logic.ShopService;
+
 public class CountScheduler {
+	ShopService service = new ShopService();
 	private int cnt;
 	/*
 	 * cron
@@ -60,9 +73,40 @@ public class CountScheduler {
 	 * 			edate  varchar(10)	#환율기준일
 	 * 		)
 	 */
-	@Scheduled(cron="0 0 10 ? * MON-FRI *")
+	@Scheduled(cron="0 18 10 * * ?")
 	public void execute3() {
 		System.out.println("평일 아침 10시에 환율 정보 조회 후 db 등록.");
+		Document doc = null;
+		List<List<String>> trlist = new ArrayList<>();
+		String url = "https://koreaexim.go.kr/wg/HPHKWG057M01";
+		String exdate = null;
+		try {
+			doc = Jsoup.connect(url).get();
+			Elements trs = doc.select("tr");
+			exdate = doc.select("p.table-unit").html();
+			exdate = exdate.substring(exdate.indexOf(":")+2);
+			for(Element tr : trs) {
+				List<String> tdlist = new ArrayList<>();
+				Elements tds = tr.select("td");
+				for(Element td : tds) {
+					tdlist.add(td.html());
+				}
+				if(tdlist.size()>0) {
+					trlist.add(tdlist);
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		for(List<String> tds:trlist) {
+			Exchange ex = new Exchange(0,tds.get(0),tds.get(1),
+					Float.parseFloat(tds.get(4).replace(",","")),
+					Float.parseFloat(tds.get(2).replace(",","")),
+					Float.parseFloat(tds.get(3).replace(",","")),exdate.trim());
+			service.exchangeInsert(ex);
+		}
+		System.out.println(exdate + "황율등록완료");
+		
 	}
 	
 }
