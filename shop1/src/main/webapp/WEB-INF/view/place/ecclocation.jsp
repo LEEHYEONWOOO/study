@@ -116,39 +116,44 @@ var infowindow = new kakao.maps.InfoWindow({zIndex:1});
 
 // 키워드 검색을 요청하는 함수입니다
 function searchPlaces(data) {
+    		ercnt=0;
     // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
-    //for ( var i=0; i<data.length; i++ ) {
-    for ( var i=0; i<1; i++ ) {
+    for (i=0; i<data.length; i++ ) {
+    	console.log('i에 대한 for문 시작')
+    	//for ( var i=0; i<1; i++ ) {
     	//ps.keywordSearch(data[i].statNm, placesSearchCB);
     	ps.keywordSearch(data[i].statNm, function(data2, status, pagination) {//CB함수가 있던자리지만 화끈하게 날렸음
     		if (status === kakao.maps.services.Status.OK) {  
-    	        
     	        //console.log('불러왔냐!')
     	        for(var j=0; j<data2.length; j++){
-   	        		console.log(data[i].addr +"  ==   "+ data2[j].road_address_name)
-	    	        if(data[i].addr == data2[j].road_address_name){
-    	        		alert(data[i].addr +"  ==   "+ data2[j].road_address_name)
-    		        }
+   	        		console.log(ercnt+'번 실행됨. 현재 실행중인 j  반복문 : '+j)
+    	        	console.log(data2[j].road_address_name + '++++++'+j)
+    	        	console.log(data2[j].id + '++++++'+j)
+    	        	console.log(data2[j].place_url + '++++++'+j)
+    	        	console.log(data2[j].id + '++++++'+j)
+	    	       // if(data[i].addr == data2[j].road_address_name){
+    	        	//	alert(data[i].addr +"  ==   "+ data2[j].road_address_name)
+    		        //}
     	        }
+ 		   	        displayPlaces(data2[0]);//0을 입력해서 맨처음꺼만 맵 입력했었음
     	        
-    	        displayPlaces(data2[0]);
     	        
     	        displayPagination(pagination);
-
+				ercnt++
         } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-
-            alert('검색 결과가 존재하지 않습니다.');
+			ercnt++
+            alert('검색 결과가 존재하지 않습니다.'+ercnt);
             return;
 
         } else if (status === kakao.maps.services.Status.ERROR) {
-
-            alert('검색 결과 중 오류가 발생했습니다.');
+			ercnt++
+            alert('검색 결과 중 오류가 발생했습니다.'+ercnt);
             return;
 
         }
     	}
-    	    );
-    }
+	);
+	}
 }
 
 
@@ -169,9 +174,7 @@ function displayPlaces(places) {
 
     // 지도에 표시되고 있는 마커를 제거합니다
     //removeMarker();
-    console.log(places)
     for ( var i=0; i<1; i++ ) {
-
         // 마커를 생성하고 지도에 표시합니다
         var placePosition = new kakao.maps.LatLng(places.y, places.x),
             marker = addMarker(placePosition, mark_index), 
@@ -213,64 +216,6 @@ function displayPlaces(places) {
     map.setBounds(bounds);
 }
 
-/* 내가 틀릴수도있응니 백업해놓음
- * // 검색 결과 목록과 마커를 표출하는 함수입니다
- function displayPlaces(places) {
-	    var listEl = document.getElementById('placesList'), 
-	    menuEl = document.getElementById('menu_wrap'),
-	    fragment = document.createDocumentFragment(), 
-	    bounds = new kakao.maps.LatLngBounds(), 
-	    listStr = '';
-	    
-	    // 검색 결과 목록에 추가된 항목들을 제거합니다
-	    //removeAllChildNods(listEl);
-
-	    // 지도에 표시되고 있는 마커를 제거합니다
-	    //removeMarker();
-	    console.log(places)
-	    for ( var i=0; i<1; i++ ) {
-
-	        // 마커를 생성하고 지도에 표시합니다
-	        var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
-	            marker = addMarker(placePosition, mark_index), 
-	            itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
-
-	        // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
-	        // LatLngBounds 객체에 좌표를 추가합니다
-	        bounds.extend(placePosition);
-
-	        // 마커와 검색결과 항목에 mouseover 했을때
-	        // 해당 장소에 인포윈도우에 장소명을 표시합니다
-	        // mouseout 했을 때는 인포윈도우를 닫습니다
-	        (function(marker, title) {
-	            kakao.maps.event.addListener(marker, 'mouseover', function() {
-	                displayInfowindow(marker, title);
-	            });
-
-	            kakao.maps.event.addListener(marker, 'mouseout', function() {
-	                infowindow.close();
-	            });
-
-	            itemEl.onmouseover =  function () {
-	                displayInfowindow(marker, title);
-	            };
-
-	            itemEl.onmouseout =  function () {
-	                infowindow.close();
-	            };
-	        })(marker, places[i].place_name);
-
-	        fragment.appendChild(itemEl);
-	    }
-
-	    // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
-	    listEl.appendChild(fragment);
-	    menuEl.scrollTop = 0;
-
-	    // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
-	    map.setBounds(bounds);
-	}
- */
 
 // 검색결과 항목을 Element로 반환하는 함수입니다
 function getListItem(index, places) {
@@ -287,6 +232,7 @@ function getListItem(index, places) {
         itemStr += '    <span>' +  places.address_name  + '</span>'; 
     }
                  
+//      itemStr += '  <span class="tel"><a href='+place_url+'></span>' 
       itemStr += '  <span class="tel">' + places.phone  + '</span>' +
                 '</div>';           
 
@@ -390,7 +336,7 @@ function removeAllChildNods(el) {
 				data : params,
          success : function(data) {
         	 data1=data
-        	 //console.log(data)
+        	 console.log(data[0].addr)
            	data = _.uniqBy(data,'statNm')
            	data = _.uniqBy(data,'addr')
               let table = '<caption>'+$("select[name=si2]").val()+' '+$("select[name=gu2]").val()+'</caption><tr><td>충전소명</td><td>충전기타입</td><td>주소</td><td>이용가능시간</td><td>운영기관연락처</td></tr>';
