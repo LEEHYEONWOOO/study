@@ -42,6 +42,10 @@
 #placesList .item .marker_13 {background-position: 0 -562px;}
 #placesList .item .marker_14 {background-position: 0 -608px;}
 #placesList .item .marker_15 {background-position: 0 -654px;}
+#placesList .item .marker_16 {background-position: 0 -654px;} <!-- 15에 대한 기준? -->
+#placesList .item .marker_17 {background-position: 0 -654px;} <!-- 15에 대한 기준? -->
+
+#placesList .item .marker_17 {background-position: 0 -654px;}
 #pagination {margin:10px auto;text-align: center;}
 #pagination a {display:inline-block;margin-right:10px;}
 #pagination .on {font-weight: bold; cursor: default;color:#777;}
