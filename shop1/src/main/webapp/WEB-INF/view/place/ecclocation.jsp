@@ -115,38 +115,117 @@ const ps = new kakao.maps.services.Places();
 // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
 var infowindow = new kakao.maps.InfoWindow({zIndex:1});
 
+
+var maxCallCnt = 0;
+var runCnt = 0;
+const searchInMethod = (data2 ,status, pagination) => {
+	runCnt++;
+	if (status === kakao.maps.services.Status.OK) {  
+        for(var j=0; j<data2.length; j++){
+        	//console.log(pagination)
+       		//console.log(data2)
+        	//console.log(ercnt+'번 실행됨. 현재 실행중인 j  반복문 : '+j)
+        	//console.log(data2[j].road_address_name + '++++++'+j)
+        	//console.log(data2[j].id + '++++++'+j)
+        	//console.log(data2[j].place_url + '++++++'+j)
+        	//console.log(data2[j].id + '++++++'+j)
+        	
+	       // if(data[i].addr == data2[j].road_address_name){
+        	//	alert(data[i].addr +"  ==   "+ data2[j].road_address_name)
+	        //}
+        }
+        	searchArr.push(data2[0])
+        	//console.log("data2[0]값이 들어갑니다. : ", data2[0]);
+        	
+
+        	
+        	//console.log(typeof(data2[0]))
+	   	        //displayPlaces(data2[0]);//0을 입력해서 맨처음꺼만 맵 입력했었음
+			
+	   	        
+	   	        
+	   	        //displayPlaces(searchArr);//0을 입력해서 맨처음꺼만 맵 입력했었음
+	   	    	//console.log(searchArr)
+        
+        
+        displayPagination(pagination);
+	   	        
+	   	console.log("maxCall cnt : ", maxCallCnt, " runCnt : ", runCnt);
+    	if(maxCallCnt === runCnt) {
+    		console.log("searchArr 제대로 나와야함. : ", searchArr);
+    		displayPlaces(searchArr);
+    		runCnt = 0;
+    	}
+		ercnt++
+} else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+	ercnt++
+    alert(data[i].statNm+'에 대한 검색 결과가 존재하지 않습니다.'+ercnt);
+    return;
+
+} else if (status === kakao.maps.services.Status.ERROR) {
+	ercnt++
+    alert('검색 결과 중 오류가 발생했습니다.'+ercnt);
+    return;
+
+}
+}
+
 // 키워드로 장소를 검색합니다
 //searchPlaces();
-
+searchArr = [];
 // 키워드 검색을 요청하는 함수입니다
+console.log("search places 1111111111111111");
 function searchPlaces(data) {
     		ercnt=0;
+    		
+    		maxCallCnt = data.length;
     // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
     for (i=0; i<data.length; i++ ) {
     	console.log('i에 대한 for문 시작')
+    	
+    	
+    	// searchInMethod
+    	ps.keywordSearch(data[i].statNm, searchInMethod)
+    	// 1000 난 필요없는데;;      -> 새로운 무언갈 창조~~~~
+    	// 935  난 이게필요함 ;ㅣ;     ->  
+    			
     	//for ( var i=0; i<1; i++ ) {
     	//ps.keywordSearch(data[i].statNm, placesSearchCB);
-    	ps.keywordSearch(data[i].statNm, function(data2, status, pagination) {//CB함수가 있던자리지만 화끈하게 날렸음
+    	
+    	/* ps.keywordSearch(data[i].statNm, function(data2, status, pagination) {//CB함수가 있던자리지만 화끈하게 날렸음
     		if (status === kakao.maps.services.Status.OK) {  
-    	        //console.log('불러왔냐!')
+    	        
     	        for(var j=0; j<data2.length; j++){
-   	        		console.log(ercnt+'번 실행됨. 현재 실행중인 j  반복문 : '+j)
-    	        	console.log(data2[j].road_address_name + '++++++'+j)
-    	        	console.log(data2[j].id + '++++++'+j)
-    	        	console.log(data2[j].place_url + '++++++'+j)
-    	        	console.log(data2[j].id + '++++++'+j)
+    	        	//console.log(pagination)
+   	        		//console.log(data2)
+    	        	//console.log(ercnt+'번 실행됨. 현재 실행중인 j  반복문 : '+j)
+    	        	//console.log(data2[j].road_address_name + '++++++'+j)
+    	        	//console.log(data2[j].id + '++++++'+j)
+    	        	//console.log(data2[j].place_url + '++++++'+j)
+    	        	//console.log(data2[j].id + '++++++'+j)
+    	        	
 	    	       // if(data[i].addr == data2[j].road_address_name){
     	        	//	alert(data[i].addr +"  ==   "+ data2[j].road_address_name)
     		        //}
     	        }
- 		   	        displayPlaces(data2[0]);//0을 입력해서 맨처음꺼만 맵 입력했었음
+    	        	searchArr.push(data2[0])
+    	        	console.log("data2[0]값이 들어갑니다. : ", data2[0]);
+    	        	
+    	        	
+    	        	//console.log(typeof(data2[0]))
+ 		   	        //displayPlaces(data2[0]);//0을 입력해서 맨처음꺼만 맵 입력했었음
+					
+ 		   	        
+ 		   	        
+ 		   	        //displayPlaces(searchArr);//0을 입력해서 맨처음꺼만 맵 입력했었음
+ 		   	    	//console.log(searchArr)
     	        
     	        
     	        displayPagination(pagination);
 				ercnt++
         } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
 			ercnt++
-            alert('검색 결과가 존재하지 않습니다.'+ercnt);
+            alert(data[i].statNm+'에 대한 검색 결과가 존재하지 않습니다.'+ercnt);
             return;
 
         } else if (status === kakao.maps.services.Status.ERROR) {
@@ -154,11 +233,19 @@ function searchPlaces(data) {
             alert('검색 결과 중 오류가 발생했습니다.'+ercnt);
             return;
 
-        }
-    	}
-	);
-	}
-}
+        } // else if
+    	} // keywordSearch
+	); */
+	} // for
+    //displayPlaces(searchArr);
+	//console.log(JSON.stringify(searchArr))
+	console.log("search places Done 222222");
+	
+	
+	console.log(searchArr)
+    //displayPlaces(searchArr);
+    console.log(searchArr[3])
+} // searchPlaces
 
 
 
@@ -167,6 +254,7 @@ function searchPlaces(data) {
 
 // 검색 결과 목록과 마커를 표출하는 함수입니다
 function displayPlaces(places) {
+	console.log(places)
     var listEl = document.getElementById('placesList'), 
     menuEl = document.getElementById('menu_wrap'),
     fragment = document.createDocumentFragment(), 
@@ -174,15 +262,17 @@ function displayPlaces(places) {
     listStr = '';
     
     // 검색 결과 목록에 추가된 항목들을 제거합니다
-    //removeAllChildNods(listEl);
+    removeAllChildNods(listEl);
 
     // 지도에 표시되고 있는 마커를 제거합니다
-    //removeMarker();
-    for ( var i=0; i<1; i++ ) {
+    removeMarker();
+    
+    for ( var i=0; i<places.length; i++ ) {
+
         // 마커를 생성하고 지도에 표시합니다
-        var placePosition = new kakao.maps.LatLng(places.y, places.x),
-            marker = addMarker(placePosition, mark_index), 
-            itemEl = getListItem(i, places); // 검색 결과 항목 Element를 생성합니다
+        var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
+            marker = addMarker(placePosition, i), 
+            itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
 
         // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
         // LatLngBounds 객체에 좌표를 추가합니다
@@ -207,7 +297,7 @@ function displayPlaces(places) {
             itemEl.onmouseout =  function () {
                 infowindow.close();
             };
-        })(marker, places.place_name);
+        })(marker, places[i].place_name);
 
         fragment.appendChild(itemEl);
     }
@@ -279,14 +369,16 @@ function removeMarker() {
 function displayPagination(pagination) {
     var paginationEl = document.getElementById('pagination'),
         fragment = document.createDocumentFragment(),
-        i; 
+        i;
+    //console.log(pagination)
 
     // 기존에 추가된 페이지번호를 삭제합니다
     while (paginationEl.hasChildNodes()) {
         paginationEl.removeChild (paginationEl.lastChild);
     }
 
-    for (i=1; i<=pagination.last; i++) {
+//    for (i=1; i<=pagination.last; i++) {
+    for (i=1; i<=7; i++) {
         var el = document.createElement('a');
         el.href = "#";
         el.innerHTML = i;
@@ -311,7 +403,7 @@ function displayPagination(pagination) {
 function displayInfowindow(marker, title) {
     var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
 
-    infowindow.setContent(content);
+    infowindow.setContent(content); //infowindow 에 표시할 내용
     infowindow.open(map, marker);
 }
 
