@@ -72,6 +72,8 @@
      <mvc:mapping path="/board/write"/>
      <mvc:mapping path="/board/update"/>
      <mvc:mapping path="/board/delete"/>
+     <mvc:mapping path="/admin/recog"/>
+     <mvc:mapping path="/admin/refuse"/>
      <bean class="interceptor.BoardInterceptor" />
   </mvc:interceptor>
 </mvc:interceptors>       

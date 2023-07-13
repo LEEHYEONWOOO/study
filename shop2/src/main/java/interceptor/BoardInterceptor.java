@@ -6,6 +6,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import exception.BoardException;
 import exception.LoginException;
 import logic.User;
 
@@ -22,7 +23,7 @@ public class BoardInterceptor extends HandlerInterceptorAdapter {
 			if(login == null || !login.getUserid().equals("admin")) {  //로그인 정보 확인
 				String msg = "관리자만 등록 가능합니다.";
 				String url = request.getContextPath()+ "/board/list?boardid=" + boardid;
-				throw new LoginException(msg,url);
+				throw new BoardException(msg,url);
 			}
 		}
 		return true; //다음 메서드 호출 가능. controller.BoardController.write() 호출
