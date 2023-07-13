@@ -39,6 +39,8 @@ public class BoardController {
 		
 		return mav;
 	}
+	
+	
 	/*
 	 * 1. 유효성 검증
 	 * 2. db의 board 테이블에 내용 저장, 파일 업로드
